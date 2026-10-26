@@ -49,6 +49,64 @@ GroupSwitch/
 J’ajoute un projet Infrastructure : l’énoncé dit « architecture recommandée », donc c’est permis. Il garde le scraping, l’IA et le PDF hors de Business.
 
 
+GroupSwitch.Api → GroupSwitch.Business
+
+L'API appelle les services et règles métier.
+
+
+
+GroupSwitch.Api → GroupSwitch.Data
+
+Au début, l'API peut configurer l'injection des dépendances et l'accès aux données.
+
+
+
+GroupSwitch.Data → GroupSwitch.Business, si nécessaire
+
+Utile si les classes métier ou les interfaces sont définies dans Business. Évite les dépendances circulaires.
+
+
+
+GroupSwitch.Tests → GroupSwitch.Business
+
+Les tests vérifient les règles métier. Tu ajouteras des références à d'autres projets si tu dois aussi les tester.
+
+
+
+GroupSwitch/
+├── backend/
+│   ├── GroupSwitch.Api/
+│   ├── GroupSwitch.Business/
+│   ├── GroupSwitch.Data/
+│   └── GroupSwitch.Tests/
+│
+├── frontend_angular/
+│   ├── src/
+│   │   └── app/
+│   │       ├── core/
+│   │       ├── layout/
+│   │       ├── features/
+│   │       ├── shared/  Composants réutilisables, pipes et directives
+│   │       ├── app.routes.ts
+│   │       └── app.config.ts
+│   └── package.json
+│
+└── GroupSwitch.sln
+
+
+src/app/app.routes.ts
+
+Déclaration des routes
+src/app/app.config.ts
+
+Configuration Angular et HttpClient
+src/styles.css
+
+Styles globaux et variables CSS
+
+
+
+
 
 Modèle de données (EF Core)
 
