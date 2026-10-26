@@ -1075,24 +1075,4 @@ Use these labels consistently in the project documentation:
 
 ---
 
-## 20. Final Quality Checklist
-
-Before considering the architecture documentation complete, verify that:
-
-- [ ] The diagrams match the actual solution projects and dependencies.
-- [ ] The domain model matches the implemented C# entities.
-- [ ] The ER diagram matches the database schema and migrations.
-- [ ] The API contracts match the actual endpoints and DTOs.
-- [ ] The change-request state machine matches the agreed workflow.
-- [ ] Chain exchanges are transaction-safe and have rollback tests.
-- [ ] Capacity and assignment constraints are protected against concurrency.
-- [ ] Timetable conflict detection is deterministic and tested.
-- [ ] AI output is validated by backend business rules.
-- [ ] SignalR events are authorized and emitted after successful persistence.
-- [ ] Import and export behavior is tested.
-- [ ] Logging includes useful diagnostics without exposing sensitive data.
-- [ ] Security and resource-level authorization tests are documented.
-- [ ] Deployment configuration and recovery procedures are documented.
-- [ ] No proposed or untested feature is incorrectly marked as verified.
-
 **End of document.**
