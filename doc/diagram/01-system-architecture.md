@@ -560,9 +560,9 @@ The exact status codes and workflow states must match the implemented API contra
 
 ---
 
-## 9. Sequence Diagram — Chain Exchange
+## Sequence Diagram — Chain Exchange
 
-A chain exchange involving three or more students must be atomic.
+A chain exchange involving three or more students must be atomic: either all assignment changes are committed, or none are.
 
 ```mermaid
 sequenceDiagram
@@ -571,7 +571,7 @@ sequenceDiagram
     participant API as ASP.NET Core API
     participant Service as ChainExchangeService
     participant Rules as Business Validators
-    participant DB as Database Transaction
+    participant DB as Database
     participant Hub as SignalR
 
     Coordinator->>UI: Confirm chain exchange
@@ -579,26 +579,27 @@ sequenceDiagram
     API->>Service: Execute exchange
 
     Service->>Rules: Validate all participants and assignments
-    Rules-->>Service: Validation result
+    Rules-->>Service: Return validation result
 
-    alt At least one validation fails
+    alt Validation fails
         Service-->>API: Reject exchange
-        API-->>UI: Validation error; no changes committed
-    else All validations succeed
+        API-->>UI: Return validation error
+        Note over UI,DB: No assignment changes are committed
+    else Validation succeeds
         Service->>DB: Begin transaction
         Service->>DB: Apply all assignment changes
         Service->>DB: Save and commit
 
         alt Persistence or concurrency failure
-            DB-->>Service: Failure
+            DB-->>Service: Return failure
             Service->>DB: Roll back transaction
-            Service-->>API: Exchange failed
-            API-->>UI: Error response
-        else Commit succeeds
-            DB-->>Service: Transaction committed
-            Service-->>API: Exchange successful
-            API-->>UI: Success response
-            API->>Hub: Publish scoped event after commit
+            Service-->>API: Return exchange failure
+            API-->>UI: Return error response
+        else Transaction commits successfully
+            DB-->>Service: Confirm commit
+            Service-->>API: Return success
+            API-->>UI: Return success response
+            API->>Hub: Publish authorized event after commit
         end
     end
 ```
